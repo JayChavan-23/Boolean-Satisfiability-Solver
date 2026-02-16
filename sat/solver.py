@@ -68,7 +68,13 @@ def unit_propagate(clauses,assignment):
             # Updated that we have mede changes
             is_changed = True
 
+            clauses = simplify_clauses(clauses,assignment)
+
+            if clauses is None:
+                return None 
             
+            break 
+    return clauses,assignment
 
 
 # Main method uses helpers to decide the final output
