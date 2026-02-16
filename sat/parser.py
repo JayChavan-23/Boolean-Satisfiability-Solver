@@ -1,0 +1,1 @@
+# Converts .cnf files into lists and expressions for py to process
