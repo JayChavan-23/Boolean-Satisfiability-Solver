@@ -33,6 +33,28 @@ def simplify_clauses(clauses, assignment):
 
     return simplified
 
+# Unit Propogation helper function
+def unit_propagate(clauses,assignment):
+    # track if we have made prpgress in the last pass
+    is_changed = True
+
+    while is_changed:
+        is_changed = False
+
+        # find the unit clause
+        for clause in clauses:
+            if len(clause) != 1:
+                continue
+            # Once we found it
+            # Use the only literal in the clause
+            lit = clause[0]
+            # Get the var
+            var = abs(lit)
+            # if lit is positive then the var must be positive
+            is_pos = (lit>0) 
+
+            #
+
 
 # Main method uses helpers to decide the final output
 def dpll_solver(clauses, assignment):
