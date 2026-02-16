@@ -1,6 +1,9 @@
 # Contains main logic for the DPLL algorithm
 
 # Helper function
+from operator import is_
+
+
 def simplify_clauses(clauses, assignment):
     simplified = []
 
@@ -53,7 +56,19 @@ def unit_propagate(clauses,assignment):
             # if lit is positive then the var must be positive
             is_pos = (lit>0) 
 
-            #
+            # If var is already assigned check for conflict
+            if var in assignment:
+                if assignment[var] != is_pos:
+                    # Conflict found
+                    return None 
+                continue
+            
+            # Else assign 
+            assignment[var] = is_pos
+            # Updated that we have mede changes
+            is_changed = True
+
+            
 
 
 # Main method uses helpers to decide the final output
