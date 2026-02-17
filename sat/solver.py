@@ -58,21 +58,22 @@ def unit_propagate(clauses,assignment):
             if var in assignment:
                 if assignment[var] != is_pos:
                     # Conflict found
-                    return None , assignment
-                continue
-            
-            # Else assign 
+                    return None, assignment
+                # Already satisfied; simplify to remove this clause and continue propagation
+                clauses = simplify_clauses(clauses, assignment)
+                if clauses is None:
+                    return None, assignment
+                is_changed = True
+                break
+
+            # Else assign and simplify
             assignment[var] = is_pos
-            # Updated that we have mede changes
             is_changed = True
-
-            clauses = simplify_clauses(clauses,assignment)
-
+            clauses = simplify_clauses(clauses, assignment)
             if clauses is None:
-                return None , assignment
-            
-            break 
-    return clauses,assignment
+                return None, assignment
+            break
+    return clauses, assignment
 
 
 # Main method uses helpers to decide the final output
@@ -90,4 +91,27 @@ def dpll_solver(clauses, assignment):
     if len(clauses) == 0:
         return "SAT"
 
+    # Pick an unassigned variable (first one appearing in clauses)
+    branch_var = None
+    for clause in clauses:
+        for lit in clause:
+            v = abs(lit)
+            if v not in assignment:
+                branch_var = v
+                break
+        if branch_var is not None:
+            break
+
+    if branch_var is None:
+        return "UNSAT"
+
+    # Branch: try True, then False (each branch gets a copy of assignment)
+    assignment_true = assignment.copy()
+    assignment_true[branch_var] = True
+    if dpll_solver(clauses, assignment_true) == "SAT":
+        return "SAT"
+
+    assignment_false = assignment.copy()
+    assignment_false[branch_var] = False
+    return dpll_solver(clauses, assignment_false)
 
